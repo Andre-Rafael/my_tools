@@ -1,23 +1,23 @@
-import os
 from easygui import diropenbox, fileopenbox, filesavebox
+import os
 
 files = []
 
-def selecionar_pasta_com_arquivos(extension):
-    pasta = diropenbox('Escolha a pasta com os relatorios')
+def selecionar_pasta_com_arquivos(extension, titulo = 'Escolha a pasta com os relatorios'):
+    pasta = diropenbox(titulo)
     return directory_explorer(pasta, extension)
 
 def directory_explorer(dir, extension):
     for arquivo in os.listdir(dir):
         enderecos_arquivo = os.path.join(dir, arquivo)
         if os.path.isfile(enderecos_arquivo):
-            if enderecos_arquivo.endswith(extension):
+            if enderecos_arquivo.lower().endswith(extension):
                 files.append(enderecos_arquivo)
         else:
             directory_explorer(enderecos_arquivo, extension)
     return files
 
-def dir_to_safe(extension, titulo='Escolha o local para salvar o arquivo'):
+def dir_to_safe(extension: str, titulo='Escolha o local para salvar o arquivo'):
     dir = filesavebox(titulo)
     if dir.endswith(extension):
         return dir
