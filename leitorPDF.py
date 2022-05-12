@@ -1,6 +1,7 @@
-from io import StringIO
 from pdfminer.high_level import extract_text, extract_text_to_fp
 from unidecode import unidecode
+from io import StringIO
+import pdfplumber
 import PyPDF2
 import re
 
@@ -32,6 +33,12 @@ class LeitorPDF:
         sem_cifrao = re.sub(r'r\$', '', unico_espacamento)
         return sem_cifrao
 
+    def _can_clean_text(self, answer: bool, text: str):
+        if answer:
+            return self.clean_text(text)
+        else:
+            return text
+
     def show_clean_text(self, file):
         text = self.__show_text(file)
         return self.clean_text(text)
@@ -47,8 +54,22 @@ class LeitorPDF:
         text_in_pdf: str = extract_text(document, page_numbers=[n])
         return self.clean_text(text_in_pdf)
 
-    def text_pdf_fp(self, document: str, n_page: int = None, max_pages: int = 0) -> str:
+    def text_pdf_fp(self, document: str, clean_text: bool, n_page: int = None, max_pages: int = 0) -> str:
         output_string = StringIO()
         with open(document, 'rb') as f:
             extract_text_to_fp(f, output_string, maxpages=max_pages, page_numbers=n_page)
-        return self.clean_text(output_string.getvalue())
+        return self._can_clean_text(clean_text, output_string.getvalue())
+
+    def text_with_pdfplumber(self, file: str, clean_text: bool, page_number: int = None):
+        pdf = pdfplumber.open(file)
+        text = ''
+
+        if page_number == None:
+            for page in pdf.pages:
+                text += page.extract_text()
+        else:
+            page = pdf.pages[page_number]
+            text = page.extract_text()
+            
+        return self._can_clean_text(clean_text, text)
+
