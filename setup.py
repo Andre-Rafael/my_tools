@@ -16,5 +16,5 @@ setuptools.setup(
     url='https://github.com/Andre-Rafael/my_tools',
     license='MIT',
     packages=['my_tools'],
-    requires=requeriments
+    install_requires=requeriments
 )
