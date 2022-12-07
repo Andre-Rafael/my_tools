@@ -1,0 +1,1 @@
+pip install git+https://github.com/Andre-Rafael/my_tools.git
