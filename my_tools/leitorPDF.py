@@ -70,7 +70,7 @@ class LeitorPDF:
 
 
     def text_with_pdfplumber(self, file: str, clean_text: bool, page_number: int = None):
-        with open(file) as pdf:
+        with pdfplumber.open(file) as pdf:
             if page_number == None:
                 for page in pdf.pages:
                     text += page.extract_text()
