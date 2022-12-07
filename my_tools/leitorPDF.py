@@ -69,7 +69,8 @@ class LeitorPDF:
         return self._can_clean_text(clean_text, output_string.getvalue())
 
 
-    def text_with_pdfplumber(self, file: str, clean_text: bool, page_number: int = None):
+    def text_with_pdfplumber(self, file: str, clean_text: bool, page_number: int = None) -> str:
+        text = ''
         with pdfplumber.open(file) as pdf:
             if page_number == None:
                 for page in pdf.pages:
